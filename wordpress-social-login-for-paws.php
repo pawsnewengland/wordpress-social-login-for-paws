@@ -5,7 +5,7 @@
  * Plugin URI: https://github.com/pawsnewengland/wordpress-social-login-for-paws/
  * GitHub Plugin URI: https://github.com/pawsnewengland/wordpress-social-login-for-paws/
  * Description: Extends the <a href="https://wordpress.org/plugins/wordpress-social-login/">WordPress Social Login plugin</a>.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Chris Ferdinandi
  * Author URI: http://gomakethings.com
  * License: GPLv3
@@ -95,6 +95,25 @@ function wp_social_login_for_paws_change_default_login_length( $seconds, $user_i
 
 }
 add_filter( 'auth_cookie_expiration', 'wp_social_login_for_paws_change_default_login_length', 10, 3 );
+
+
+
+/**
+ * Request fewer permissions from Google
+ */
+function wp_social_login_for_paws_lower_default_permissons( $provider_scope, $provider ) {
+    if ( 'facebook' == strtolower( $provider ) ) {
+        $provider_scope = 'email'; // should not be empty or it will be overwritten
+    }
+
+    if ( 'google' == strtolower( $provider ) ) {
+        $provider_scope = 'profile'; // should not be empty or it will be overwritten
+    }
+
+    return $provider_scope;
+}
+
+add_filter( 'wsl_hook_alter_provider_scope', 'wp_social_login_for_paws_lower_default_permissons', 10, 2 );
 
 
 
